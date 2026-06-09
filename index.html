@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThreadEverest — Custom Sportswear Manufacturer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080A0E;
+    --dark: #0F1218;
+    --card: #141820;
+    --border: rgba(255,255,255,0.07);
+    --white: #F5F7FA;
+    --muted: #8A93A6;
+    --accent: #E8312A;
+    --accent2: #FF6B35;
+    --gold: #C9A84C;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 70px;
+    background: rgba(8,10,14,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--accent);
+    color: var(--white) !important;
+    padding: 0.55rem 1.3rem;
+    border-radius: 3px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: #c4271f !important; color: var(--white) !important; }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; align-items: center;
+    overflow: hidden;
+    padding: 0 5%;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1800&q=80');
+    background-size: cover;
+    background-position: center 30%;
+    filter: brightness(0.3);
+    transform: scale(1.03);
+    animation: heroZoom 12s ease-out forwards;
+  }
+  @keyframes heroZoom { to { transform: scale(1); } }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(105deg, rgba(8,10,14,0.85) 40%, transparent 100%);
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 750px;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(232,49,42,0.15);
+    border: 1px solid rgba(232,49,42,0.35);
+    color: var(--accent2);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    margin-bottom: 1.8rem;
+  }
+  .hero-badge::before { content: '●'; font-size: 0.5rem; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+    display: block;
+  }
+  .hero p {
+    font-size: 1.1rem;
+    color: rgba(245,247,250,0.7);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--white);
+    padding: 0.9rem 2.2rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    border-radius: 3px;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: #c4271f; transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    padding: 0.9rem 2.2rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 3px;
+    transition: border-color 0.2s, background 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+  .hero-stats {
+    position: absolute; bottom: 3rem; left: 5%;
+    display: flex; gap: 3rem;
+    z-index: 2;
+    animation: fadeUp 1s ease 0.6s both;
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 2.2rem;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--accent); }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.25rem;
+    font-weight: 600;
+  }
+
+  /* SECTION SHARED */
+  section { padding: 100px 5%; }
+  .section-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .section-tag::before { content: ''; width: 28px; height: 2px; background: var(--accent); }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 4vw, 3.8rem);
+    text-transform: uppercase;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  /* SPORTS GRID */
+  #sports { background: var(--dark); }
+  .sports-header { max-width: 600px; margin-bottom: 4rem; }
+  .sports-header p {
+    margin-top: 1.2rem;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .sports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .sport-card {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--card);
+  }
+  .sport-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease, filter 0.4s;
+    filter: brightness(0.55) saturate(0.7);
+  }
+  .sport-card:hover img { transform: scale(1.06); filter: brightness(0.45) saturate(0.5); }
+  .sport-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,10,14,0.95) 0%, transparent 60%);
+  }
+  .sport-card-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1.5rem;
+  }
+  .sport-card-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .sport-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+  .sport-card p {
+    font-size: 0.8rem;
+    color: rgba(245,247,250,0.6);
+    margin-top: 0.4rem;
+    line-height: 1.5;
+    font-weight: 300;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .sport-card:hover p { max-height: 60px; }
+
+  /* CAPABILITIES */
+  #capabilities { background: var(--black); }
+  .cap-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+  .cap-image {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .cap-image img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    filter: brightness(0.85);
+  }
+  .cap-image-tag {
+    position: absolute;
+    top: 1.5rem; left: 1.5rem;
+    background: var(--accent);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    border-radius: 2px;
+  }
+  .cap-list { display: flex; flex-direction: column; gap: 0; }
+  .cap-item {
+    padding: 1.8rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    transition: background 0.2s;
+  }
+  .cap-item:first-child { padding-top: 0; }
+  .cap-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    min-width: 28px;
+    padding-top: 3px;
+  }
+  .cap-text h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+  .cap-text p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* WHY */
+  #why { background: var(--dark); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 4rem;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .why-card {
+    background: var(--card);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .why-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--accent);
+    transition: height 0.4s ease;
+  }
+  .why-card:hover { background: #181e28; }
+  .why-card:hover::before { height: 100%; }
+  .why-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+  .why-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.7rem;
+  }
+  .why-card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* PHOTO STRIP */
+  .photo-strip {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 300px 300px;
+    gap: 4px;
+    background: var(--black);
+    padding: 0 5% 80px;
+  }
+  .strip-img {
+    overflow: hidden;
+    position: relative;
+  }
+  .strip-img:first-child { grid-row: 1 / 3; }
+  .strip-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease, filter 0.4s;
+    filter: brightness(0.75) saturate(0.85);
+  }
+  .strip-img:hover img { transform: scale(1.05); filter: brightness(0.65); }
+
+  /* QUOTE BANNER */
+  .quote-banner {
+    background: var(--accent);
+    padding: 4rem 5%;
+    text-align: center;
+  }
+  .quote-banner blockquote {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    color: var(--white);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .quote-banner cite {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--black); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    margin-top: 4rem;
+    align-items: center;
+  }
+  .contact-info p {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    font-weight: 300;
+    margin: 1.5rem 0 2.5rem;
+  }
+  .contact-channels { display: flex; flex-direction: column; gap: 1rem; }
+  .channel-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--white);
+    background: var(--card);
+    transition: border-color 0.2s, background 0.2s;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  .channel-btn:hover { border-color: var(--accent); background: rgba(232,49,42,0.06); }
+  .channel-icon { font-size: 1.4rem; }
+  .channel-text { }
+  .channel-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.15rem; font-weight: 600; }
+  .channel-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 0.02em; }
+  .contact-image {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .contact-image img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    filter: brightness(0.8);
+  }
+  .contact-image-badge {
+    position: absolute;
+    bottom: 1.5rem; right: 1.5rem;
+    background: rgba(8,10,14,0.9);
+    border: 1px solid var(--border);
+    padding: 1rem 1.3rem;
+    border-radius: 4px;
+    backdrop-filter: blur(8px);
+  }
+  .badge-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+  }
+  .badge-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; letter-spacing: 0.05em; font-weight: 300; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--dark);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .footer-logo span { color: var(--accent); }
+  footer p { font-size: 0.8rem; color: var(--muted); font-weight: 300; }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; font-weight: 300; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .cap-grid, .contact-grid { grid-template-columns: 1fr; }
+    .cap-image { order: -1; }
+    .cap-image img { aspect-ratio: 16/9; }
+    .contact-image { display: none; }
+    .why-grid { grid-template-columns: 1fr 1fr; }
+    .photo-strip { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .strip-img:first-child { grid-row: auto; grid-column: 1 / 3; height: 280px; }
+    .strip-img { height: 200px; }
+    .hero-stats { gap: 1.5rem; }
+  }
+  @media (max-width: 600px) {
+    section { padding: 70px 5%; }
+    .why-grid { grid-template-columns: 1fr; }
+    .photo-strip { grid-template-columns: 1fr; }
+    .strip-img:first-child { grid-column: auto; }
+    .sports-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Thread<span>Everest</span></a>
+  <ul class="nav-links">
+    <li><a href="#sports">Sports</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Direct Manufacturer · Pakistan → Worldwide</div>
+    <h1>Built For<br><em>Performance.</em><br>Made To Order.</h1>
+    <p>Full-custom uniforms and jerseys for teams, coaches, and brands. Sublimation printing, low MOQs, worldwide shipping direct from factory.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">Get a Quote</a>
+      <a href="#sports" class="btn-ghost">View Sports</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- SPORTS -->
+<section id="sports">
+  <div class="sports-header">
+    <div class="section-tag">What We Make</div>
+    <h2 class="section-title">Every Sport.<br><em>Every Position.</em></h2>
+    <p>From full uniform sets to individual jerseys — fully customized with your colors, logos, names, and numbers.</p>
+  </div>
+  <div class="sports-grid">
+
+    <div class="sport-card">
+      <img src="https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=600&q=80" alt="Football">
+      <div class="sport-card-overlay"></div>
+      <div class="sport-card-content">
+        <div class="sport-card-label">Full Kits Available</div>
+        <h3>Football Uniforms</h3>
+        <p>Jersey, pants, and full sets for tackle & 7v7</p>
+      </div>
+    </div>
+
+    <div class="sport-card">
+      <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&q=80" alt="Basketball">
+      <div class="sport-card-overlay"></div>
+      <div class="sport-card-content">
+        <div class="sport-card-label">Reversible Options</div>
+        <h3>Basketball Uniforms</h3>
+        <p>Jerseys and shorts for full teams</p>
+      </div>
+    </div>
+
+    <div class="sport-card">
+      <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80" alt="Soccer">
+      <div class="sport-card-overlay"></div>
+      <div class="sport-card-content">
+        <div class="sport-card-label">Complete Kits</div>
+        <h3>Soccer Uniforms</h3>
+        <p>Jerseys, shorts, socks for any club or league</p>
+      </div>
+    </div>
+
+    <div class="sport-card">
+      <img src="https://images.unsplash.com/photo-1508344928928-7165b67de128?w=600&q=80" alt="Baseball">
+      <div class="sport-card-overlay"></div>
+      <div class="sport-card-content">
+        <div class="sport-card-label">Pro-Style Cuts</div>
+        <h3>Baseball Uniforms</h3>
+        <p>Jerseys, pants, and full team sets</p>
+      </div>
+    </div>
+
+    <div class="sport-card">
+      <img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?w=600&q=80" alt="Martial Arts">
+      <div class="sport-card-overlay"></div>
+      <div class="sport-card-content">
+        <div class="sport-card-label">BJJ · Judo · Karate</div>
+        <h3>Martial Arts Gis</h3>
+        <p>Custom patches, embroidery & branding</p>
+      </div>
+    </div>
+
+    <div class="sport-card">
+      <img src="https://images.unsplash.com/photo-1515703407324-5f753afd8be8?w=600&q=80" alt="Hockey">
+      <div class="sport-card-overlay"></div>
+      <div class="sport-card-content">
+        <div class="sport-card-label">Pro-Grade Sublimation</div>
+        <h3>Ice Hockey Jerseys</h3>
+        <p>Custom sublimation & team branding</p>
+      </div>
+    </div>
+
+    <div class="sport-card">
+      <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80" alt="Training Gear">
+      <div class="sport-card-overlay"></div>
+      <div class="sport-card-content">
+        <div class="sport-card-label">Performance Wear</div>
+        <h3>Training Gear</h3>
+        <p>Compression, warm-up suits & athletic wear</p>
+      </div>
+    </div>
+
+    <div class="sport-card">
+      <img src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=600&q=80" alt="Volleyball">
+      <div class="sport-card-overlay"></div>
+      <div class="sport-card-content">
+        <div class="sport-card-label">Men's & Women's Cuts</div>
+        <h3>Volleyball & More</h3>
+        <p>Paintball, wrestling, lacrosse, softball & more</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section id="capabilities">
+  <div class="section-tag">Our Capabilities</div>
+  <h2 class="section-title">Full Custom.<br><em>Start to Finish.</em></h2>
+  <div class="cap-grid">
+    <div class="cap-image">
+      <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80" alt="Manufacturing">
+      <div class="cap-image-tag">Direct Factory</div>
+    </div>
+    <div class="cap-list">
+      <div class="cap-item">
+        <div class="cap-num">01</div>
+        <div class="cap-text">
+          <h4>Sublimation Printing</h4>
+          <p>Photographic-quality all-over color. Your design printed directly into the fabric — never cracks, peels, or fades.</p>
+        </div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-num">02</div>
+        <div class="cap-text">
+          <h4>Screen Print & Embroidery</h4>
+          <p>Classic looks for team logos, sponsor patches, and name/number applications.</p>
+        </div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-num">03</div>
+        <div class="cap-text">
+          <h4>Flexible MOQ</h4>
+          <p>No huge minimums. Youth teams to college programs — we can accommodate any order size.</p>
+        </div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-num">04</div>
+        <div class="cap-text">
+          <h4>OEM & Private Label</h4>
+          <p>Launching your own brand? We handle end-to-end private label production from fabric to finished product.</p>
+        </div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-num">05</div>
+        <div class="cap-text">
+          <h4>Worldwide Shipping</h4>
+          <p>Reliable logistics to the US and globally. Full tracking, on-time delivery, no middlemen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE BANNER -->
+<div class="quote-banner">
+  <blockquote>
+    "Direct Manufacturer. No Middlemen. Better Pricing."
+    <cite>— ThreadEverest · Pakistan → Worldwide</cite>
+  </blockquote>
+</div>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-tag">Why ThreadEverest</div>
+  <h2 class="section-title">What Sets<br><em>Us Apart.</em></h2>
+  <div class="why-grid">
+    <div class="why-card">
+      <span class="why-icon">🏭</span>
+      <h3>Direct Manufacturer</h3>
+      <p>No middlemen. You work directly with the factory — better pricing, faster communication, full control over your order.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">📦</span>
+      <h3>Low MOQ</h3>
+      <p>Accessible for small teams and growing brands. You don't need a massive order to get professional-grade gear.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🎨</span>
+      <h3>Full Customization</h3>
+      <p>Your colors, logos, names, and numbers. Every detail built exactly to your spec — no templates, no compromises.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">✈️</span>
+      <h3>Worldwide Shipping</h3>
+      <p>We ship to the US and globally. Reliable logistics with full tracking and on-time delivery guaranteed.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🇺🇸</span>
+      <h3>US Market Experience</h3>
+      <p>We understand US sizing standards, quality benchmarks, and team requirements — built into every single order.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🏷️</span>
+      <h3>OEM & Private Label</h3>
+      <p>Launching your own brand? We handle full private label production from raw fabric to finished, branded product.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag">Get In Touch</div>
+  <h2 class="section-title">Ready To Order?<br><em>Let's Talk.</em></h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p>Send us your requirements and we'll get back to you with a quote — fast. Whether it's 10 jerseys or 1,000, we've got you covered.</p>
+      <div class="contact-channels">
+        <a href="https://instagram.com/threadeverest" class="channel-btn" target="_blank">
+          <span class="channel-icon">📸</span>
+          <div class="channel-text">
+            <div class="channel-label">Instagram DM</div>
+            <div class="channel-name">@threadeverest</div>
+          </div>
+        </a>
+        <a href="https://wa.me/923191606223" class="channel-btn" target="_blank">
+          <span class="channel-icon">💬</span>
+          <div class="channel-text">
+            <div class="channel-label">WhatsApp</div>
+            <div class="channel-name">+92 319 160 6223</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="contact-image">
+      <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=700&q=80" alt="Factory">
+      <div class="contact-image-badge">
+        <div class="badge-title">ThreadEverest</div>
+        <div class="badge-sub">Pakistan → Worldwide</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Thread<span>Everest</span></div>
+  <p>© 2026 ThreadEverest. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#sports">Sports</a>
+    <a href="#capabilities">Capabilities</a>
+    <a href="#why">Why Us</a>
+    <a href="https://instagram.com/threadeverest" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+</body>
+</html>
